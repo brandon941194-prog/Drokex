@@ -290,6 +290,7 @@ export default function Home() {
               width={170}
               height={45}
               priority
+               style={{ height: "auto" }}
             />
           </div>
 
@@ -611,6 +612,83 @@ export default function Home() {
           />
         </div>
       </section>
+      {/* REGISTRO SIMPLE (BASE DE DATOS) */}
+<section className="bg-white py-20 text-black">
+  <div className="mx-auto max-w-xl px-8">
+    <h2 className="mb-6 text-3xl font-bold">
+      Registro rápido
+    </h2>
+
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.currentTarget);
+
+        const nombre = formData.get("nombre");
+        const telefono = formData.get("telefono");
+        const documento = formData.get("documento");
+
+        try {
+          const res = await fetch("/api/registro", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: nombre,
+              phone: telefono,
+              document_id: documento,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (data.success) {
+            alert("Guardado en base de datos 🚀");
+            e.currentTarget.reset();
+          } else {
+            alert("Error al guardar ❌");
+          }
+        } catch (error) {
+          alert("Error de conexión ❌");
+        }
+      }}
+      className="space-y-5"
+    >
+      <input
+        name="nombre"
+        type="text"
+        placeholder="Nombre completo"
+        required
+        className="w-full rounded-xl border px-4 py-3"
+      />
+
+      <input
+        name="telefono"
+        type="text"
+        placeholder="Teléfono"
+        required
+        className="w-full rounded-xl border px-4 py-3"
+      />
+
+      <input
+        name="documento"
+        type="text"
+        placeholder="Cédula / Documento"
+        required
+        className="w-full rounded-xl border px-4 py-3"
+      />
+
+      <button
+        type="submit"
+        className="w-full rounded-xl bg-black py-3 text-white font-semibold"
+      >
+        Guardar datos
+      </button>
+    </form>
+  </div>
+</section>
     </main>
   );
 }
